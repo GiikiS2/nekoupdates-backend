@@ -27,7 +27,7 @@ export async function downloadDatabase() {
   }
 }
 
-const db = new Database('site_updates.db');
+const db = new Database('/tmp/site_updates.db');
 
 db.exec(`
   CREATE TABLE IF NOT EXISTS site_updates (
