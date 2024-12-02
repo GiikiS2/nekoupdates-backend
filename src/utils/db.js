@@ -2,29 +2,29 @@ import Database from 'better-sqlite3';
 
 import fs from 'fs';
 import axios from 'axios';
-
+import FormData from 'form-data';
 const remoteDbUrl = 'https://giikis2.nekoweb.org/site_updates.db';
-const localDbPath = 'site_updates.db';
+const localDbPath = '/tmp/site_updates.db'; // Use /tmp for Vercel compatibility
 
 export async function downloadDatabase() {
-    try {
-        const response = await axios({
-            method: 'get',
-            url: remoteDbUrl,
-            responseType: 'stream',
-        });
+  try {
+      const response = await axios({
+          method: 'get',
+          url: remoteDbUrl,
+          responseType: 'stream',
+      });
 
-        const writer = fs.createWriteStream(localDbPath);
-        response.data.pipe(writer);
+      const writer = fs.createWriteStream(localDbPath);
+      response.data.pipe(writer);
 
-        return new Promise((resolve, reject) => {
-            writer.on('finish', resolve);
-            writer.on('error', reject);
-        });
-    } catch (error) {
-        console.error('Error downloading database:', error);
-        throw error;
-    }
+      return new Promise((resolve, reject) => {
+          writer.on('finish', resolve);
+          writer.on('error', reject);
+      });
+  } catch (error) {
+      console.error('Error downloading database:', error);
+      throw error;
+  }
 }
 
 const db = new Database('site_updates.db');
